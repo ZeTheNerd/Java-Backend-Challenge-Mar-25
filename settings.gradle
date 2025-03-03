@@ -1,0 +1,4 @@
+rootProject.name = 'java-backend-challenge'
+
+include 'calculator'
+include 'rest'
