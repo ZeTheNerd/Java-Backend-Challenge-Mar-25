@@ -1,0 +1,6 @@
+{
+    "name": "java-devcontainer",
+    "dockerComposeFile": "docker-compose-dev.yml",
+    "workspaceFolder": "/workspace",
+    "service": "java-devcontainer"
+}

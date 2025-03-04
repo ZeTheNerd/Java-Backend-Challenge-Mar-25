@@ -1,0 +1,10 @@
+services:
+  java-devcontainer:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - 8080:8080
+    volumes:
+      - ..:/workspace
+    command: /bin/sh -c "while sleep 1000; do :; done"
