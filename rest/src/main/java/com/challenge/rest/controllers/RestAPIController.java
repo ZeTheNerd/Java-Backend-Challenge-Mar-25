@@ -30,4 +30,11 @@ public class RestAPIController {
     public BigDecimal getMultiplication(@RequestParam BigDecimal a, @RequestParam BigDecimal b) {
         return a.multiply(b);
     }
+
+    // GET /division?a=<BigDecimal>&b=<BigDecimal>
+    // Endpoint for multiplication operation
+    @GetMapping(value="division", produces=MediaType.APPLICATION_JSON_VALUE)
+    public BigDecimal getDivision(@RequestParam BigDecimal a, @RequestParam BigDecimal b) {
+        return a.divide(b);
+    }
 }
