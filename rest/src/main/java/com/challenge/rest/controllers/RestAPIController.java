@@ -16,4 +16,11 @@ public class RestAPIController {
     public BigDecimal getSum(@RequestParam BigDecimal a, @RequestParam BigDecimal b) {
         return a.add(b);
     }
+
+    // GET /subtraction?a=<BigDecimal>&b=<BigDecimal>
+    // Endpoint for subtraction operation
+    @GetMapping(value="subtraction", produces=MediaType.APPLICATION_JSON_VALUE)
+    public BigDecimal getSubtraction(@RequestParam BigDecimal a, @RequestParam BigDecimal b) {
+        return a.subtract(b);
+    }
 }
