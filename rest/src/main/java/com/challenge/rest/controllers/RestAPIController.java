@@ -23,4 +23,11 @@ public class RestAPIController {
     public BigDecimal getSubtraction(@RequestParam BigDecimal a, @RequestParam BigDecimal b) {
         return a.subtract(b);
     }
+
+    // GET /multiplication?a=<BigDecimal>&b=<BigDecimal>
+    // Endpoint for multiplication operation
+    @GetMapping(value="multiplication", produces=MediaType.APPLICATION_JSON_VALUE)
+    public BigDecimal getMultiplication(@RequestParam BigDecimal a, @RequestParam BigDecimal b) {
+        return a.multiply(b);
+    }
 }
