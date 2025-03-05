@@ -1,3 +1,5 @@
+include:
+  - docker-compose-kafka.yml
 services:
   java-devcontainer:
     build:
