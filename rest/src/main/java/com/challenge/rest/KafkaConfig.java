@@ -8,6 +8,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -28,36 +29,15 @@ import com.challenge.rest.pojos.CalculatorTask;
 @EnableKafka
 public class KafkaConfig {
     
-    // @Bean
-    // public ProducerFactory<String, CalculatorTask> producerFactory() {
-    //     return new DefaultKafkaProducerFactory<>(
-    //         Map.of(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "broker:9096",
-    //                ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
-    //                ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class)
-    //     );
-    // }
-
-    // @Bean
-    // public ConsumerFactory<String, BigDecimal> consumerFactory() {
-    //     return new DefaultKafkaConsumerFactory<>(
-    //         Map.of(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "broker:9096",
-    //                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
-    //                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class,
-    //                ConsumerConfig.GROUP_ID_CONFIG, "rest-consumer-group")
-    //     );
-    // }
-
-    // @Bean
-    // public ConcurrentKafkaListenerContainerFactory<String, BigDecimal> containerFactory() {
-    //     ConcurrentKafkaListenerContainerFactory<String, BigDecimal> factory = new ConcurrentKafkaListenerContainerFactory<>();
-    //     factory.setConsumerFactory(consumerFactory());
-    //     return factory;
-    // }
+    @Value("${kafka.topic.calculator-request-topic}")
+    private String requestTopic;
+    @Value("${kafka.topic.calculator-reply-topic}")
+    private String replyTopic;
     
     @Bean
     public ConcurrentMessageListenerContainer<String, BigDecimal> repliesContainer(
         ConcurrentKafkaListenerContainerFactory<String, BigDecimal> containerFactory) {
-            return containerFactory.createContainer("calculator-result");
+            return containerFactory.createContainer(replyTopic);
         }
 
 
@@ -70,12 +50,12 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic taskRequests() {
-        return TopicBuilder.name("calculator-request").build();
+        return TopicBuilder.name(requestTopic).build();
     }
 
     @Bean
     public NewTopic taskResults() {
-        return TopicBuilder.name("calculator-result").build();
+        return TopicBuilder.name(replyTopic).build();
     }
     
 }
