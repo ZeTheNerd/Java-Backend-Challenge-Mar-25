@@ -2,26 +2,19 @@ package com.challenge.rest.pojos;
 
 import java.math.BigDecimal;
 
-enum Operation {
-    SUM,
-    SUBTRACTION,
-    MULTIPLICATION,
-    DIVISION
-}
-
 public class CalculatorTask {
-    private Operation operation;
+    private CalculatorOperation operation;
     private BigDecimal first;
     private BigDecimal second;
     
-    public CalculatorTask(Operation op, BigDecimal a, BigDecimal b) {
-        operation = op;
-        first = a;
-        second = b;
+    public CalculatorTask(CalculatorOperation op, BigDecimal first, BigDecimal second) {
+        this.operation = op;
+        this.first = first;
+        this.second = second;
     }
 
-    public Operation getOperation() {return operation;}
-    public void setOperation(Operation op) {operation = op;}
+    public CalculatorOperation getOperation() {return operation;}
+    public void setOperation(CalculatorOperation op) {operation = op;}
 
     public BigDecimal getFirst() {return first;}
     public void setFirst(BigDecimal first) {this.first = first;}
