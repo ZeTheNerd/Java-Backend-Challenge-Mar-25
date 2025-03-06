@@ -1,5 +1,6 @@
 include:
   - docker-compose-kafka.yml
+
 services:
   java-devcontainer:
     build:
@@ -10,3 +11,5 @@ services:
     volumes:
       - ..:/workspace
     command: /bin/sh -c "while sleep 1000; do :; done"
+    networks:
+      - kafka_net
