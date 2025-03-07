@@ -6,7 +6,6 @@ services:
   # Kafka broker from dockerhub apache/kafka quickstart (https://hub.docker.com/r/apache/kafka) 
   broker:
     image: apache/kafka:latest
-    container_name: broker
     networks:
       - kafka_net
     environment:
