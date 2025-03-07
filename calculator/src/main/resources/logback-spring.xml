@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <!-- get spring boot application name from application.properties -->
+    <springProperty scope="context" name="appName" source="spring.application.name" />
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{ISO8601} %5level ${PID} --- [%property{appName}] [%15.15t] [request-id: %X{requestID}] %-40.40logger{40} : %m%n%ex{short}
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="File"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/calculator.log</file>
+        <encoder
+            class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                %d{ISO8601} %5level ${PID} --- [%t] [request-id: %X{requestID}] %logger : %m%n%ex
+            </pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>$./logs/archived/calculator-%d.log
+            </fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="Console" />
+        <appender-ref ref="File" />
+    </root>
+</Configuration>
