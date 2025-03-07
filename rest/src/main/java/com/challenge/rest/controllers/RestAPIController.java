@@ -2,12 +2,17 @@ package com.challenge.rest.controllers;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
+import org.springframework.kafka.requestreply.RequestReplyFuture;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +32,7 @@ public class RestAPIController {
     // GET /sum?a=<BigDecimal>&b=<BigDecimal>
     // Endpoint for sum operation
     @GetMapping(value="sum", produces={MediaType.APPLICATION_JSON_VALUE})
-    public BigDecimal getSum(@RequestParam BigDecimal a, @RequestParam BigDecimal b) {
+    public String getSum(@RequestParam BigDecimal a, @RequestParam BigDecimal b) throws InterruptedException, ExecutionException, TimeoutException {
         // create unique ID for this request
         String id = UUID.randomUUID().toString();
 
@@ -35,31 +40,68 @@ public class RestAPIController {
         CalculatorTask sum = new CalculatorTask(CalculatorOperation.SUM, a, b);
         ProducerRecord<String, CalculatorTask> record = new ProducerRecord<String,CalculatorTask>(requestTopic, id, sum);
 
-        // send mesage to broker
-        replyingTemplate.sendAndReceive(record);
+        // send mesage to request topic
+        RequestReplyFuture<String, CalculatorTask, BigDecimal> future = replyingTemplate.sendAndReceive(record);
+        // await for reply in results topic
+        ConsumerRecord<String, BigDecimal> result = future.get(5, TimeUnit.SECONDS);
 
-
-        return a.add(b);
+        return "{\"result\": " + result.value() + "}";
     }
 
     // GET /subtraction?a=<BigDecimal>&b=<BigDecimal>
     // Endpoint for subtraction operation
     @GetMapping(value="subtraction", produces=MediaType.APPLICATION_JSON_VALUE)
-    public BigDecimal getSubtraction(@RequestParam BigDecimal a, @RequestParam BigDecimal b) {
-        return a.subtract(b);
+    public String getSubtraction(@RequestParam BigDecimal a, @RequestParam BigDecimal b) throws InterruptedException, ExecutionException, TimeoutException {
+        // create unique ID for this request
+        String id = UUID.randomUUID().toString();
+
+        // create message to be sent to calculator via kafka
+        CalculatorTask subtraction = new CalculatorTask(CalculatorOperation.SUBTRACTION, a, b);
+        ProducerRecord<String, CalculatorTask> record = new ProducerRecord<String,CalculatorTask>(requestTopic, id, subtraction);
+
+        // send mesage to request topic
+        RequestReplyFuture<String, CalculatorTask, BigDecimal> future = replyingTemplate.sendAndReceive(record);
+        // await for reply in results topic
+        ConsumerRecord<String, BigDecimal> result = future.get(5, TimeUnit.SECONDS);
+
+        return "{\"result\": " + result.value() + "}";
     }
 
     // GET /multiplication?a=<BigDecimal>&b=<BigDecimal>
     // Endpoint for multiplication operation
     @GetMapping(value="multiplication", produces=MediaType.APPLICATION_JSON_VALUE)
-    public BigDecimal getMultiplication(@RequestParam BigDecimal a, @RequestParam BigDecimal b) {
-        return a.multiply(b);
+    public String getMultiplication(@RequestParam BigDecimal a, @RequestParam BigDecimal b) throws InterruptedException, ExecutionException, TimeoutException {
+        // create unique ID for this request
+        String id = UUID.randomUUID().toString();
+
+        // create message to be sent to calculator via kafka
+        CalculatorTask multiplication = new CalculatorTask(CalculatorOperation.MULTIPLICATION, a, b);
+        ProducerRecord<String, CalculatorTask> record = new ProducerRecord<String,CalculatorTask>(requestTopic, id, multiplication);
+
+        // send mesage to request topic
+        RequestReplyFuture<String, CalculatorTask, BigDecimal> future = replyingTemplate.sendAndReceive(record);
+        // await for reply in results topic
+        ConsumerRecord<String, BigDecimal> result = future.get(5, TimeUnit.SECONDS);
+
+        return "{\"result\": " + result.value() + "}";
     }
 
     // GET /division?a=<BigDecimal>&b=<BigDecimal>
     // Endpoint for multiplication operation
     @GetMapping(value="division", produces=MediaType.APPLICATION_JSON_VALUE)
-    public BigDecimal getDivision(@RequestParam BigDecimal a, @RequestParam BigDecimal b) {
-        return a.divide(b);
+    public String getDivision(@RequestParam BigDecimal a, @RequestParam BigDecimal b) throws InterruptedException, ExecutionException, TimeoutException {
+        // create unique ID for this request
+        String id = UUID.randomUUID().toString();
+
+        // create message to be sent to calculator via kafka
+        CalculatorTask division = new CalculatorTask(CalculatorOperation.DIVISION, a, b);
+        ProducerRecord<String, CalculatorTask> record = new ProducerRecord<String,CalculatorTask>(requestTopic, id, division);
+
+        // send mesage to request topic
+        RequestReplyFuture<String, CalculatorTask, BigDecimal> future = replyingTemplate.sendAndReceive(record);
+        // await for reply in results topic
+        ConsumerRecord<String, BigDecimal> result = future.get(5, TimeUnit.SECONDS);
+
+        return "{\"result\": " + result.value() + "}";
     }
 }
