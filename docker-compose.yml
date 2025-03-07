@@ -1,0 +1,19 @@
+include:
+  - docker-compose-kafka.yml
+
+services:
+  rest-container:
+    build: 
+      context: rest
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - kafka_net
+  
+  calculator-container:
+    build:
+      context: calculator
+      dockerfile: Dockerfile
+    networks:
+      - kafka_net
